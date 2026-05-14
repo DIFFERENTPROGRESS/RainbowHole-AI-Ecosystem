@@ -45,9 +45,6 @@ The compute unit executes inference locally.
   - `auto` — remote-first with automatic local fallback on failure
 - **Memory guard** — `psutil` RAM check before local inference to prevent OOM
 
-**Planned:**
-- **PetalsProvider** — distributed GPU inference across swarm nodes (Phase 3)
-
 #### Model Strategy
 
 Use of **Small Language Models (SLMs)** such as Qwen2.5-Coder and Phi-3, optimized for low memory latency.
@@ -68,16 +65,6 @@ Instead of burying knowledge inside model weights, RainbowHole utilizes an **ext
 - **Cross-node sync** — push/pull files between local and remote vaults, diff comparison
 - **Deduplication** — same content → same CID, stored once
 
-**Planned (Phase 2):**
-- **Vectorized RAG** — automatic chunk + embed on vault store using ChromaDB or Orama
-- **Context injection** — `InferenceRequest.context_cids` field exists (schema-level), not yet wired to inference
-- **Semantic search** via cosine similarity in embedding space
-
-**Planned (Phase 3):**
-- Actual **IPFS daemon** integration (go-ipfs/kubo)
-- **DHT-based CID routing** across swarm nodes
-- **Deltas & Snapshots** — knowledge updates as incremental layers
-
 ---
 
 ### Layer III — Collective Intelligence Protocol (Network)
@@ -89,17 +76,6 @@ Networking of nodes to form a swarm.
 - **SSE streaming** — server-sent events for real-time token-by-token inference
 - **GPU query** — `nvidia-smi` integration for utilization, VRAM, temperature
 - **Sliding window** latency tracking (10-sample deque for jitter analysis)
-
-**Planned (Phase 3):**
-- **libp2p + WebRTC** — P2P mesh to bypass NAT barriers
-- **Consensus of Reason (CoR)** — probabilistic validation: critical queries sent to *n* random peers, accepted only when semantic convergence exceeds a threshold:
-
-  ```
-  R_final = centroid({O₁, O₂, ..., Oₙ})
-  accept if σ(O₁..ₙ) < τ
-  ```
-
-- **Petals protocol** — GPU sharing across the swarm
 
 ---
 
@@ -294,47 +270,6 @@ Higher UoR balances allow access to larger model instances within the swarm (e.g
 
 ---
 
-## Implementation Roadmap
-
-### V0 — Scaffolding (Current State ✅)
-
-- Python orchestration framework
-- FastAPI REST + SSE API (12 endpoints)
-- Streamlit dark-themed UI (chat + vault tabs)
-- Local inference via Ollama (`LocalProvider`)
-- Remote inference via VPS (`RemoteProvider` with retry)
-- BrainRouter auto-fallback mode
-- Content-addressed vault (SHA-256 CID on local filesystem)
-- Cross-node vault sync (push/pull/diff)
-- Heartbeat pulse monitor with GPU stats
-- Memory-guarded inference (psutil RAM check)
-- API key authentication
-- VPS deployment script (systemd + Docker)
-
-### Phase 2 — Autonomy Mode (Planned 🔜)
-
-- Vectorized RAG pipeline with ChromaDB or Orama
-- Auto chunk + embed on vault store
-- Context injection from vault CIDs into inference prompts
-- Complete removal of external API dependencies
-- Optimization for **8 GB RAM** system limit
-- 3B parameter models (SLMs)
-- Full model weight verification via SHA-256
-
-### Phase 3 — Mesh Integration (Planned 🔮)
-
-- Actual IPFS daemon integration (go-ipfs/kubo)
-- DHT-based CID routing across swarm nodes
-- libp2p + WebRTC P2P mesh for NAT traversal
-- **Consensus of Reason (CoR)** — probabilistic response validation
-- **Petals protocol** — distributed GPU inference
-- Swarm mode for BrainRouter
-- Sybil protection via Proof-of-Useful-Work
-- UoR credit system and SLA tiers
-- Solar-powered off-grid operation support
-
----
-
 ## Hardware Requirements
 
 | Component | Minimal (Guerilla) | Recommended (Sovereign) |
@@ -349,14 +284,8 @@ Higher UoR balances allow access to larger model instances within the swarm (e.g
 
 ## Security & Integrity
 
-### Implemented
 - **API key authentication** — Bearer token required on all sensitive endpoints (`_verify_key()` middleware)
 - **Memory guard** — RAM threshold check prevents OOM crashes
-
-### Planned
-- **Sybil protection** — reputation weighting based on cryptographic Proof-of-Useful-Work
-- **Model integrity** — verification of model weights via SHA-256 hashes against a decentralized registry
-- **End-to-end encryption** for P2P communication
 
 ---
 
@@ -374,6 +303,76 @@ python-dotenv      # Environment configuration
 streamlit          # Web dashboard UI
 psutil             # Memory/CPU monitoring
 ```
+
+---
+
+## Roadmap & Further Steps
+
+All planned work beyond V0, organized by theme.
+
+### V0 — Scaffolding (Current ✅)
+
+- Python orchestration framework
+- FastAPI REST + SSE API (12 endpoints)
+- Streamlit dark-themed UI (chat + vault tabs)
+- Local inference via Ollama (`LocalProvider`)
+- Remote inference via VPS (`RemoteProvider` with retry)
+- BrainRouter auto-fallback mode
+- Content-addressed vault (SHA-256 CID on local filesystem)
+- Cross-node vault sync (push/pull/diff)
+- Heartbeat pulse monitor with GPU stats
+- Memory-guarded inference (psutil RAM check)
+- API key authentication
+- VPS deployment script (systemd + Docker)
+
+### Phase 2 — Autonomy Mode (Next 🔜)
+
+- **Vectorized RAG** — automatic chunk + embed on vault store using ChromaDB or Orama
+- **Context injection** — pull relevant vault CIDs as context into inference prompts
+- **Semantic search** — cosine similarity over embedding space for document retrieval
+- **8 GB RAM optimization** — fit entire pipeline within low-memory constraint
+- **3B parameter SLMs** — model strategy using Qwen2.5-Coder, Phi-3, etc.
+- **Remove external API dependencies** — fully local operation
+- **Model weight integrity** — SHA-256 verification against a decentralized registry
+
+### Phase 3 — Mesh Network (Planned 🔮)
+
+- **IPFS daemon** — integrate go-ipfs/kubo for true content-addressed distributed storage
+- **DHT-based CID routing** — locate content across swarm nodes without central index
+- **libp2p + WebRTC** — P2P mesh networking to bypass NAT barriers
+- **Consensus of Reason (CoR)** — probabilistic validation algorithm
+
+  ```
+  R_final = centroid({O₁, O₂, ..., Oₙ})
+  accept if σ(O₁..ₙ) < τ
+  ```
+
+- **Swarm mode for BrainRouter** — route inference across peer nodes
+- **Deltas & Snapshots** — knowledge updates as incremental layers
+
+### Phase 4 — Distributed Inference (Planned 🔮)
+
+- **Petals protocol** — run large models collaboratively across swarm GPUs
+- **PetalsProvider** — new inference backend replacing RemoteProvider for P2P mode
+- **GPU sharing** — contribute idle VRAM to the swarm, earn UoR credits
+- **Distributed model serving** — split transformer layers across peers
+
+### Phase 5 — Incentives & Economics (Planned 🔮)
+
+- **Unit of Reason (UoR)** — contribution-based credit system
+- **UoR mining** — earn credits by:
+  - Providing persistent storage for IPFS chunks
+  - Validating inference results of other nodes
+  - Exporting inference cycles during solar energy surplus
+- **SLA tiers** — higher UoR balance unlocks larger model instances
+- **Sybil protection** — Proof-of-Useful-Work for reputation weighting
+
+### Phase 6 — Hardening & Autonomy (Planned 🔮)
+
+- **End-to-end encryption** for all P2P communication
+- **Off-grid operation** — solar-supported LiFePO₄ battery bank
+- **Autonomous mode** — self-healing node with automatic peer discovery
+- **Regenerative energy scheduling** — defer intensive inference to solar peaks
 
 ---
 

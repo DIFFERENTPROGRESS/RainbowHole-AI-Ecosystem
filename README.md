@@ -1,4 +1,4 @@
-# 🌈 RainbowHole V0 — Decentralized Sovereign AI Node
+# 🌈 RainbowHole V0 — Decentralized Sovereign AI Ecosystem
 
 **Status:** In Development · **Stack:** Python 3.14, FastAPI, Streamlit, Ollama · **License:** MIT
 

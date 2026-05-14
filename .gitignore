@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Environment
+.env
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Vault content (index is code, blobs are data)
+vault/_index.json
+vault/*.bin
+
+# OS
+Thumbs.db
+.DS_Store

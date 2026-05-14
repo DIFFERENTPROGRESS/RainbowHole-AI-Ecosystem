@@ -1,0 +1,18 @@
+{
+  "7dfb266c7a085381c1f40d7961268e7c0893f289dacf71bd20e28f5c99175082": {
+    "cid": "7dfb266c7a085381c1f40d7961268e7c0893f289dacf71bd20e28f5c99175082",
+    "filename": "test.txt",
+    "size_bytes": 32,
+    "timestamp": 1778362613.3338175,
+    "mime_type": "text/plain",
+    "sync_status": "local_only"
+  },
+  "7f86b9eb988f16ff5839c5be9bf3017ac581429edd055500dee167f13c2cb955": {
+    "cid": "7f86b9eb988f16ff5839c5be9bf3017ac581429edd055500dee167f13c2cb955",
+    "filename": "28.01.2026_YELLOW_SCRAPE - Sheet4.csv",
+    "size_bytes": 42639,
+    "timestamp": 1778363640.5376344,
+    "mime_type": "text/csv",
+    "sync_status": "local_only"
+  }
+}
